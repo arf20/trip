@@ -103,30 +103,36 @@ typedef uint32_t capinfo_sendrecv_t;
 #define IS_ATTR_FLAG_PARTIAL(x)     ((x >> 3) & 1)
 #define IS_ATTR_FLAG_LSENCAP(x)     ((x >> 4) & 1)
 
+#define ATTR_FLAG_WELL_KNOWN        0b00000001
+#define ATTR_FLAG_TRANSITIVE        0b00000010
+#define ATTR_FLAG_DEPENDENT         0b00000100
+#define ATTR_FLAG_PARTIAL           0b00001000
+#define ATTR_FLAG_LSENCAP           0b00010000
+
 enum attr_type {
     /* RFC3219 */
-    ATTR_WITHDRAWNROUTES = 1,
-    ATTR_REACHABLEROUTES,
-    ATTR_NEXTHOPSERVER,
-    ATTR_ADVERTISEMENTPATH,
-    ATTR_ROUTEDPATH,
-    ATTR_ATOMICAGGREGATE,
-    ATTR_LOCALPREFERENCE,
-    ATTR_MULTIEXITDISC,
-    ATTR_COMMUNITIES,
-    ATTR_ITADTOPOLOGY,
-    ATTR_CONVERTEDROUTE,
+    ATTR_TYPE_WITHDRAWNROUTES = 1,
+    ATTR_TYPE_REACHABLEROUTES,
+    ATTR_TYPE_NEXTHOPSERVER,
+    ATTR_TYPE_ADVERTISEMENTPATH,
+    ATTR_TYPE_ROUTEDPATH,
+    ATTR_TYPE_ATOMICAGGREGATE,
+    ATTR_TYPE_LOCALPREFERENCE,
+    ATTR_TYPE_MULTIEXITDISC,
+    ATTR_TYPE_COMMUNITIES,
+    ATTR_TYPE_ITADTOPOLOGY,
+    ATTR_TYPE_CONVERTEDROUTE,
     /* RFC5115 */
-    ATTR_RESOURCEPRIORITY,
+    ATTR_TYPE_RESOURCEPRIORITY,
     /* RFC5140 */
-    ATTR_TOTALCIRCUITCAPACITY,
-    ATTR_AVAILABLECIRCUITS,
-    ATTR_CALLSUCCESS,
-    ATTR_E164PREFIX,
-    ATTR_PENTADECPREFIX,
-    ATTR_DECIMALPREFIX,
-    ATTR_TRUNKGROUP,
-    ATTR_CARRIER
+    ATTR_TYPE_TOTALCIRCUITCAPACITY,
+    ATTR_TYPE_AVAILABLECIRCUITS,
+    ATTR_TYPE_CALLSUCCESS,
+    ATTR_TYPE_E164PREFIX,
+    ATTR_TYPE_PENTADECPREFIX,
+    ATTR_TYPE_DECIMALPREFIX,
+    ATTR_TYPE_TRUNKGROUP,
+    ATTR_TYPE_CARRIER
 };
 
 typedef struct {
@@ -140,8 +146,8 @@ typedef struct {
     uint8_t     attr_flags;
     uint8_t     attr_type;
     uint16_t    attr_len;
-    uint32_t    id;
-    uint32_t    seq;
+    uint32_t    attr_id;
+    uint32_t    attr_seq;
     uint8_t     attr_val[];
 } msg_update_attr_lsencap_t;
 
@@ -149,6 +155,7 @@ typedef struct {
 /* attributes */
 
 /* attribute WithdrawnRoutes
+ * flags: well-known, [link-state encapsulation]
  * list of unpadded routes
  */
 
@@ -169,57 +176,67 @@ enum app_proto {
     APP_PROTO_H323_225_0_RAS,       /* H.323-H.225.0-RAS */
     APP_PROTO_H323_225_0_ANNEXG,    /* H.323-H.225.0-Annex-G */
     /* vendor */
-    APP_PROTO_IAX2 = 32768          /* vendor asterisk specific IAX2 */
+    APP_PROTO_IAX2 = 32768          /* vendor specific asterisk IAX2 */
 };
 
 typedef struct {
-    uint16_t    af;
-    uint16_t    app_proto;
-    uint16_t    len;
-    char        addr[];
+    uint16_t    route_af;
+    uint16_t    route_app_proto;
+    uint16_t    route_len;
+    char        route_addr[];
 } route_t;
 
 typedef route_t attr_withdrawnroutes_t[];
 
 /* attribute ReachableRoutes
+ * flags: well-known, [link-state encapsulation]
  * list of unpadded routes (see above)
  */
 
 typedef route_t attr_reachableroutes_t[];
 
 /* attribute NextHopServer
+ * flags: well-known
  * server: host [":" port] 
  * host: hostname, IPv4 dotted format or IPv6 enclosed in "[" "]"
  * port: decimal number 1-65535
  */
 
 typedef struct {
-    uint32_t    next_itad;
-    uint16_t    serverlen;
-    char        server[];
+    uint32_t    nexthopserver_itad;
+    uint16_t    nexthopserver_serverlen;
+    char        nexthopserver_server[];
 } attr_nexthopserver_t;
 
 /* attribute AdvertisementPath
+ * flags: well-known
  * mandatory if ReachableRoutes or WithdrawnRoutes present
  * list of ITAD path segments
  */
 
-typedef struct {
-    uint8_t     type;
-    uint8_t     len;
-    uint32_t    pathseg[];  /* ITAD numbers path */
-} itadpathseg_t;
+enum itadpath_type {
+    ITADPATH_TYPE_AP_SET = 1,
+    ITADPATH_TYPE_AP_SEQUENCE
+};
 
-typedef itadpathseg_t attr_advertisementpath_t;
+typedef struct {
+    uint8_t     itadpath_type;
+    uint8_t     itadpath_len;
+    uint32_t    itadpath_segs[];  /* ITAD numbers path */
+} itadpath_t;
+
+typedef itadpath_t attr_advertisementpath_t;
 
 /* attribute RoutedPath
+ * flags: well-known
  * mandatory if ReachableRoutes present
  * syntax same as AdvertisementPath
  */
 
-typedef itadpathseg_t attr_routedpath_t;
+typedef itadpath_t attr_routedpath_t;
 
 /* attribute AtomicAggregate
+ * flags: well-known
  * no value
  */
 
@@ -229,11 +246,13 @@ typedef itadpathseg_t attr_routedpath_t;
 typedef uint32_t attr_localpref_t;
 
 /* attribute MultiExitDiscriminator
+ * flags: well-known
  */
 
-typedef uint32_t attr_med_t;
+typedef uint32_t attr_multiexitdisc_t;
 
 /* attribute Communities
+ * flags: well-known, transitive
  * list of communities
  */
 
@@ -245,13 +264,14 @@ typedef struct {
 typedef community_t attr_communities_t[];
 
 /* attribute ITAD Topology
- * has to be link-state encapsulated
+ * flags: well-known, link-state encapsulated
  * list of peer ITADs
  */
 
 typedef uint32_t attr_itadtopology_t[];
 
 /* attribute ConvertedRoute
+ * flags: well-known
  * no value
  */
 

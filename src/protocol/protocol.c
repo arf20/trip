@@ -138,16 +138,88 @@ new_msg_update(void *buff, size_t len,
 
 runtime_error_t
 new_attr_withdrawnroutes(void *buff, size_t len,
-    const route_t *routes, size_t routes_size)
+    int lsencap, uint32_t id, uint32_t seq,
+    const route_t **routes, size_t routes_size)
 {
+    if (!buff)
+        return ERROR_BUFF;
 
+    size_t attr_size = lsencap ? sizeof(msg_update_attr_lsencap_t) :
+        sizeof(msg_update_attr_t);
+
+    for (size_t i = 0; i < routes_size; i++)
+        attr_size += sizeof(route_t) + routes[i]->route_len;
+
+    if (len < attr_size)
+        return ERROR_BUFFLEN;
+
+    void *end = buff;
+    if (lsencap) {
+        msg_update_attr_lsencap_t *attr = end;
+        attr->attr_flags = ATTR_FLAG_WELL_KNOWN;
+        attr->attr_type = ATTR_TYPE_WITHDRAWNROUTES;
+        attr->attr_len = attr_size - sizeof(msg_update_attr_lsencap_t);
+        attr->attr_id = id;
+        attr->attr_seq = seq;
+        end += sizeof(msg_update_attr_lsencap_t);
+    } else {
+        msg_update_attr_t *attr = end;
+        attr->attr_flags = ATTR_FLAG_WELL_KNOWN | ATTR_FLAG_LSENCAP;
+        attr->attr_type = ATTR_TYPE_WITHDRAWNROUTES;
+        attr->attr_len = attr_size - sizeof(msg_update_attr_t);
+        end += sizeof(msg_update_attr_t);
+    }
+
+    for (size_t i = 0; i < routes_size; i++) {
+        size_t route_size = sizeof(route_t) + routes[i]->route_len;
+        memcpy(end, routes[i], route_size);
+        end += route_size;
+    }
+
+    return end - buff;
 }
 
 runtime_error_t
 new_attr_reachableroutes(void *buff, size_t len,
-    const route_t *routes, size_t routes_size)
+    int lsencap, uint32_t id, uint32_t seq,
+    const route_t **routes, size_t routes_size)
 {
+    if (!buff)
+        return ERROR_BUFF;
 
+    size_t attr_size = lsencap ? sizeof(msg_update_attr_lsencap_t) :
+        sizeof(msg_update_attr_t);
+
+    for (size_t i = 0; i < routes_size; i++)
+        attr_size += sizeof(route_t) + routes[i]->route_len;
+
+    if (len < attr_size)
+        return ERROR_BUFFLEN;
+
+    void *end = buff;
+    if (lsencap) {
+        msg_update_attr_lsencap_t *attr = end;
+        attr->attr_flags = ATTR_FLAG_WELL_KNOWN;
+        attr->attr_type = ATTR_TYPE_REACHABLEROUTES;
+        attr->attr_len = attr_size - sizeof(msg_update_attr_lsencap_t);
+        attr->attr_id = id;
+        attr->attr_seq = seq;
+        end += sizeof(msg_update_attr_lsencap_t);
+    } else {
+        msg_update_attr_t *attr = end;
+        attr->attr_flags = ATTR_FLAG_WELL_KNOWN | ATTR_FLAG_LSENCAP;
+        attr->attr_type = ATTR_TYPE_REACHABLEROUTES;
+        attr->attr_len = attr_size - sizeof(msg_update_attr_t);
+        end += sizeof(msg_update_attr_t);
+    }
+
+    for (size_t i = 0; i < routes_size; i++) {
+        size_t route_size = sizeof(route_t) + routes[i]->route_len;
+        memcpy(end, routes[i], route_size);
+        end += route_size;
+    }
+
+    return end - buff;
 }
 
 /* server is a null-terminated C-string */
@@ -155,55 +227,192 @@ runtime_error_t
 new_attr_nexthopserver(void *buff, size_t len,
     uint32_t next_itad, const char *server)
 {
+    if (!buff)
+        return ERROR_BUFF;
+    
+    size_t server_len = strlen(server);
+    
+    if (len < sizeof(msg_update_attr_t) + sizeof(attr_nexthopserver_t) +
+        server_len)
+    {
+        return ERROR_BUFFLEN;
+    }
 
+    msg_update_attr_t *attr = buff;
+    attr->attr_flags = ATTR_FLAG_WELL_KNOWN;
+    attr->attr_type = ATTR_TYPE_NEXTHOPSERVER;
+    attr->attr_len = sizeof(attr_nexthopserver_t) + server_len;
+
+    attr_nexthopserver_t *attr_val = (attr_nexthopserver_t*)attr->attr_val;
+    attr_val->nexthopserver_itad = next_itad;
+    attr_val->nexthopserver_serverlen = server_len;
+    memcpy(attr_val->nexthopserver_server, server, server_len);
+
+    return sizeof(msg_update_attr_t) + attr->attr_len;
 }
 
 runtime_error_t
 new_attr_advertisementpath(void *buff, size_t len,
-    const itadpathseg_t *pathseg)
+    const itadpath_t *path)
 {
+    if (!buff)
+        return ERROR_BUFF;
+    
+    if (len < sizeof(msg_update_attr_t) + sizeof(attr_advertisementpath_t) +
+        (sizeof(uint32_t) * path->itadpath_len))
+    {
+        return ERROR_BUFFLEN;
+    }
 
+    msg_update_attr_t *attr = buff;
+    attr->attr_flags = ATTR_FLAG_WELL_KNOWN;
+    attr->attr_type = ATTR_TYPE_ADVERTISEMENTPATH;
+    attr->attr_len = sizeof(attr_advertisementpath_t) +
+        (sizeof(uint32_t) * path->itadpath_len);
+    memcpy(attr->attr_val, path, attr->attr_len);
+
+    return sizeof(msg_update_attr_t) + attr->attr_len;
 }
 
 runtime_error_t
 new_attr_routedpath(void *buff, size_t len,
-    const itadpathseg_t *pathseg)
+    const itadpath_t *path)
 {
+    if (!buff)
+        return ERROR_BUFF;
+    
+    if (len < sizeof(msg_update_attr_t) + sizeof(attr_routedpath_t) +
+        (sizeof(uint32_t) * path->itadpath_len))
+    {
+        return ERROR_BUFFLEN;
+    }
 
+    msg_update_attr_t *attr = buff;
+    attr->attr_flags = ATTR_FLAG_WELL_KNOWN;
+    attr->attr_type = ATTR_TYPE_ROUTEDPATH;
+    attr->attr_len = sizeof(attr_routedpath_t) +
+        (sizeof(uint32_t) * path->itadpath_len);
+    memcpy(attr->attr_val, path, attr->attr_len);
+
+    return sizeof(msg_update_attr_t) + attr->attr_len;
 }
 
 runtime_error_t
 new_attr_atomicaggregate(void *buff, size_t len)
 {
+    if (!buff)
+        return ERROR_BUFF;
+    
+    if (len < sizeof(msg_update_attr_t))
+        return ERROR_BUFFLEN;
 
+    msg_update_attr_t *attr = buff;
+    attr->attr_flags = ATTR_FLAG_WELL_KNOWN;
+    attr->attr_type = ATTR_TYPE_ATOMICAGGREGATE;
+    attr->attr_len = 0;
+
+    return sizeof(msg_update_attr_t);
 }
 
 runtime_error_t
 new_attr_localpref(void *buff, size_t len, uint32_t localpref)
 {
+    if (!buff)
+        return ERROR_BUFF;
+    
+    if (len < sizeof(msg_update_attr_t) + sizeof(attr_localpref_t))
+        return ERROR_BUFFLEN;
 
+    msg_update_attr_t *attr = buff;
+    attr->attr_flags = ATTR_FLAG_WELL_KNOWN;
+    attr->attr_type = ATTR_TYPE_LOCALPREFERENCE;
+    attr->attr_len = sizeof(attr_localpref_t);
+    *(attr_localpref_t*)attr->attr_val = localpref;
+
+    return sizeof(msg_update_attr_t) + attr->attr_len;
 }
 
 runtime_error_t
 new_attr_med(void *buff, size_t len, uint32_t metric)
 {
+    if (!buff)
+        return ERROR_BUFF;
+    
+    if (len < sizeof(msg_update_attr_t) + sizeof(attr_multiexitdisc_t))
+        return ERROR_BUFFLEN;
 
+    msg_update_attr_t *attr = buff;
+    attr->attr_flags = ATTR_FLAG_WELL_KNOWN;
+    attr->attr_type = ATTR_TYPE_MULTIEXITDISC;
+    attr->attr_len = sizeof(attr_multiexitdisc_t);
+    *(attr_multiexitdisc_t*)attr->attr_val = metric;
+
+    return sizeof(msg_update_attr_t) + attr->attr_len;
 }
 
 runtime_error_t
 new_attr_communities(void *buff, size_t len,
     const community_t *communities, size_t communities_size)
 {
+    if (!buff)
+        return ERROR_BUFF;
+    
+    if (len < sizeof(msg_update_attr_t) +
+        (sizeof(community_t) * communities_size))
+    {
+        return ERROR_BUFFLEN;
+    }
 
+    msg_update_attr_t *attr = buff;
+    attr->attr_flags = ATTR_FLAG_WELL_KNOWN | ATTR_FLAG_TRANSITIVE;
+    attr->attr_type = ATTR_TYPE_COMMUNITIES;
+    attr->attr_len = sizeof(community_t) * communities_size;
+    memcpy(attr->attr_val, communities, attr->attr_len);
+
+    return sizeof(msg_update_attr_t) + attr->attr_len;
 }
 
 runtime_error_t
 new_attr_itadtopology(void *buff, size_t len,
+    uint32_t id, uint32_t seq,
     const uint32_t *itads, size_t itads_size)
 {
+    if (!buff)
+        return ERROR_BUFF;
+    
+    if (len < sizeof(msg_update_attr_lsencap_t) +
+        (sizeof(uint32_t) * itads_size))
+    {
+        return ERROR_BUFFLEN;
+    }
 
+    msg_update_attr_lsencap_t *attr = buff;
+    attr->attr_flags = ATTR_FLAG_WELL_KNOWN | ATTR_FLAG_LSENCAP;
+    attr->attr_type = ATTR_TYPE_ITADTOPOLOGY;
+    attr->attr_len = sizeof(uint32_t) * itads_size;
+    attr->attr_id = id;
+    attr->attr_seq = seq;
+    memcpy(attr->attr_val, itads, attr->attr_len);
+
+    return sizeof(msg_update_attr_t) + attr->attr_len;
 }
 
+runtime_error_t
+new_attr_convertedroute(void *buff, size_t len)
+{
+    if (!buff)
+        return ERROR_BUFF;
+    
+    if (len < sizeof(msg_update_attr_t))
+        return ERROR_BUFFLEN;
+
+    msg_update_attr_t *attr = buff;
+    attr->attr_flags = ATTR_FLAG_WELL_KNOWN;
+    attr->attr_type = ATTR_TYPE_CONVERTEDROUTE;
+    attr->attr_len = 0;
+
+    return sizeof(msg_update_attr_t);
+}
 
 /* message KEEPALIVE */
 
