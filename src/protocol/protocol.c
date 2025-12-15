@@ -31,23 +31,23 @@ runtime_error_t
 new_msg_open(void *buff, size_t len,
     uint16_t hold, uint32_t itad, uint32_t id,
     const capinfo_routetype_t *capinfo_routetypes, size_t routetypes_size,
-    capinfo_sendrecv_t capinfo_sendrecv)
+    capinfo_trans_t capinfo_trans)
 {
     if (!buff)
         return ERROR_BUFF;
 
-    size_t capinfo_routetypes_size = 0, capinfo_sendrecv_size = 0,
+    size_t capinfo_routetypes_size = 0, capinfo_trans_size = 0,
         opt_size = 0;
 
     if (capinfo_routetypes)
         capinfo_routetypes_size = sizeof(msg_open_opt_capinfo_t) +
             (sizeof(capinfo_routetype_t) * routetypes_size);
-    if (capinfo_sendrecv != CAPINFO_SENDRECV_NULL)
-        capinfo_sendrecv_size += sizeof(msg_open_opt_capinfo_t) +
-            sizeof(capinfo_sendrecv_t);
-    if (capinfo_routetypes || capinfo_sendrecv != CAPINFO_SENDRECV_NULL)
+    if (capinfo_trans != CAPINFO_TRANS_NULL)
+        capinfo_trans_size += sizeof(msg_open_opt_capinfo_t) +
+            sizeof(capinfo_trans_t);
+    if (capinfo_routetypes || capinfo_trans != CAPINFO_TRANS_NULL)
         opt_size = sizeof(msg_open_opt_t) + capinfo_routetypes_size +
-            capinfo_sendrecv_size;
+            capinfo_trans_size;
     size_t msg_size = sizeof(msg_t) + sizeof(msg_open_t) + opt_size;
 
     if (len < msg_size)
@@ -59,7 +59,10 @@ new_msg_open(void *buff, size_t len,
     if (itad == 0)
         return ERROR_ITAD;
 
-    /* MSG { OPEN [{ OPT_CAPINFO { [CAPINFO_ROUTETYPE] | [CAPINFO_SENDRECV] } }] } */
+    /* MSG {
+     *   OPEN [{ OPT_CAPINFO { [CAPINFO_ROUTETYPE] | [CAPINFO_TRANS] } }]
+     * }
+     */
     msg_t *msg = buff;
     msg->msg_len = msg_size - sizeof(msg_t);
     msg->msg_type = MSG_TYPE_OPEN;
@@ -73,7 +76,7 @@ new_msg_open(void *buff, size_t len,
     msg_open->open_opts_len = msg_size - sizeof(msg_t) - sizeof(msg_open_t);
 
     void *end = msg_open->open_opts;
-    if (capinfo_routetypes || capinfo_sendrecv != CAPINFO_SENDRECV_NULL)  {
+    if (capinfo_routetypes || capinfo_trans != CAPINFO_TRANS_NULL)  {
         msg_open_opt_t *opt = end;
         opt->opt_type = OPEN_OPT_TYPE_CAPABILITY_INFO;
         opt->opt_len = opt_size - sizeof(msg_open_opt_t);
@@ -88,12 +91,12 @@ new_msg_open(void *buff, size_t len,
         end += capinfo_routetypes_size;
     }
 
-    if (capinfo_sendrecv != CAPINFO_SENDRECV_NULL) {
+    if (capinfo_trans != CAPINFO_TRANS_NULL) {
         msg_open_opt_capinfo_t *opt_capinfo = end;
         opt_capinfo->cap_code = CAP_CODE_SEND_RECV;
-        opt_capinfo->cap_len = sizeof(capinfo_sendrecv_t);
-        *(capinfo_sendrecv_t*)&opt_capinfo->cap_val = capinfo_sendrecv;
-        end += capinfo_sendrecv_size;
+        opt_capinfo->cap_len = sizeof(capinfo_trans_t);
+        *(capinfo_trans_t*)&opt_capinfo->cap_val = capinfo_trans;
+        end += capinfo_trans_size;
     }
 
     return msg_size;
@@ -238,6 +241,9 @@ new_attr_nexthopserver(void *buff, size_t len,
         return ERROR_BUFFLEN;
     }
 
+    if (next_itad == 0)
+        return ERROR_ITAD;
+
     msg_update_attr_t *attr = buff;
     attr->attr_flags = ATTR_FLAG_WELL_KNOWN;
     attr->attr_type = ATTR_TYPE_NEXTHOPSERVER;
@@ -251,6 +257,7 @@ new_attr_nexthopserver(void *buff, size_t len,
     return sizeof(msg_update_attr_t) + attr->attr_len;
 }
 
+/* does not check path */
 runtime_error_t
 new_attr_advertisementpath(void *buff, size_t len,
     const itadpath_t *path)
@@ -274,6 +281,7 @@ new_attr_advertisementpath(void *buff, size_t len,
     return sizeof(msg_update_attr_t) + attr->attr_len;
 }
 
+/* does not check path */
 runtime_error_t
 new_attr_routedpath(void *buff, size_t len,
     const itadpath_t *path)
@@ -333,7 +341,7 @@ new_attr_localpref(void *buff, size_t len, uint32_t localpref)
 }
 
 runtime_error_t
-new_attr_med(void *buff, size_t len, uint32_t metric)
+new_attr_multiexitdisc(void *buff, size_t len, uint32_t metric)
 {
     if (!buff)
         return ERROR_BUFF;
@@ -350,6 +358,7 @@ new_attr_med(void *buff, size_t len, uint32_t metric)
     return sizeof(msg_update_attr_t) + attr->attr_len;
 }
 
+/* does not check communities */
 runtime_error_t
 new_attr_communities(void *buff, size_t len,
     const community_t *communities, size_t communities_size)
@@ -364,7 +373,7 @@ new_attr_communities(void *buff, size_t len,
     }
 
     msg_update_attr_t *attr = buff;
-    attr->attr_flags = ATTR_FLAG_WELL_KNOWN | ATTR_FLAG_TRANSITIVE;
+    attr->attr_flags = ATTR_FLAG_TRANSITIVE;
     attr->attr_type = ATTR_TYPE_COMMUNITIES;
     attr->attr_len = sizeof(community_t) * communities_size;
     memcpy(attr->attr_val, communities, attr->attr_len);
@@ -372,6 +381,7 @@ new_attr_communities(void *buff, size_t len,
     return sizeof(msg_update_attr_t) + attr->attr_len;
 }
 
+/* does not check itads */
 runtime_error_t
 new_attr_itadtopology(void *buff, size_t len,
     uint32_t id, uint32_t seq,
@@ -445,6 +455,37 @@ new_msg_notification(void *buff, size_t len,
     size_t msg_size = sizeof(msg_t) + sizeof(msg_notif_t) + datalen;
     if (len < msg_size)
         return ERROR_BUFFLEN;
+
+    if (error_code < NOTIF_CODE_ERROR_MSG || error_code > NOTIF_CODE_CEASE)
+
+    switch (error_code) {
+    case NOTIF_CODE_ERROR_MSG:
+        if (error_subcode < NOTIF_SUBCODE_MSG_BAD_LEN ||
+            error_subcode > NOTIF_SUBCODE_MSG_BAD_TYPE)
+        {
+            return ERROR_NOTIF_ERROR_SUBCODE;
+        }
+    break;
+    case NOTIF_CODE_ERROR_OPEN:
+        if (error_subcode < NOTIF_SUBCODE_OPEN_UNSUP_VERSION ||
+            error_subcode > NOTIF_SUBCODE_OPEN_CAP_MISMATCH)
+        {
+            return ERROR_NOTIF_ERROR_SUBCODE;
+        }
+    break;
+    case NOTIF_CODE_ERROR_UPDATE:
+        if (error_subcode < NOTIF_SUBCODE_UPDATE_MALFORM_ATTR ||
+            error_subcode > NOTIF_SUBCODE_UPDATE_INVAL_ATTR)
+        {
+            return ERROR_NOTIF_ERROR_SUBCODE;
+        }
+    break;
+    case NOTIF_CODE_ERROR_EXPIRED:  /* RFC does not define subcodes for these */
+    case NOTIF_CODE_ERROR_STATE:
+    case NOTIF_CODE_CEASE:
+    break;
+    default: return ERROR_NOTIF_ERROR_CODE;
+    }
 
     msg_t *msg = buff;
     msg->msg_len = sizeof(msg_notif_t) + datalen;

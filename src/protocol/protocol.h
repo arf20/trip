@@ -80,8 +80,8 @@ typedef struct {
     uint16_t    routetype_app_proto;
 } capinfo_routetype_t;
 
-#define CAPINFO_SENDRECV_NULL   (uint32_t)-1
-typedef uint32_t capinfo_sendrecv_t;
+#define CAPINFO_TRANS_NULL   (uint32_t)-1
+typedef uint32_t capinfo_trans_t;
 
 
 /* message UPDATE
@@ -261,6 +261,8 @@ typedef struct {
     uint32_t    community_id;
 } community_t;
 
+#define COMMUNITY_NO_EXPORT ((community_t){ 0x00000000, 0xffffff01 })
+
 typedef community_t attr_communities_t[];
 
 /* attribute ITAD Topology
@@ -296,12 +298,12 @@ enum notif_code {
 };
 
 enum notif_subcode_msg {
-    NOTIF_SUBCODE_MSG_BAD_LEN,
+    NOTIF_SUBCODE_MSG_BAD_LEN = 1,
     NOTIF_SUBCODE_MSG_BAD_TYPE
 };
 
 enum notif_subcode_open {
-    NOTIF_SUBCODE_OPEN_UNSUP_VERSION,
+    NOTIF_SUBCODE_OPEN_UNSUP_VERSION = 1,
     NOTIF_SUBCODE_OPEN_BAD_ITAD,
     NOTIF_SUBCODE_OPEN_BAD_ID,
     NOTIF_SUBCODE_OPEN_UNSUP_OPT,
@@ -311,7 +313,7 @@ enum notif_subcode_open {
 };
 
 enum notif_subcode_update {
-    NOTIF_SUBCODE_UPDATE_MALFORM_ATTR,
+    NOTIF_SUBCODE_UPDATE_MALFORM_ATTR = 1,
     NOTIF_SUBCODE_UPDATE_UNK_WELLKNOWN_ATTR,
     NOTIF_SUBCODE_UPDATE_MISS_WELLKNOWN_ATTR,
     NOTIF_SUBCODE_UPDATE_BAD_ATTR_FLAG,
@@ -331,15 +333,20 @@ typedef struct {
 /* runtime errors */
 
 typedef enum runtime_errors_e {
-    ERROR_BUFF = -1,            /* invalid buffer */
-    ERROR_BUFFLEN = -2,         /* not enough buffer */
-    ERROR_HOLD = -3,            /* hold time must be 0 or at least 3 seconds */
-    ERROR_ITAD = -4,            /* ITAD must not be 0 (reserved) */
+    ERROR_BUFF = -1,                /* invalid buffer */
+    ERROR_BUFFLEN = -2,             /* not enough buffer */
+    ERROR_HOLD = -3,                /* hold time must be 0 or at least 3 s */
+    ERROR_ITAD = -4,                /* ITAD must not be 0 (reserved) */
+    ERROR_NOTIF_ERROR_CODE = -5,    /* invalid NOTIFICATION error code */
+    ERROR_NOTIF_ERROR_SUBCODE = -6  /* invalid NOTIFICATION error subcode */
 } runtime_error_t;
+
+
+/* message serializers */
 
 runtime_error_t new_msg_open(void *buff, size_t len, uint16_t hold,
     uint32_t itad, uint32_t id, const capinfo_routetype_t *capinfo_routetypes,
-    size_t routetypes_size, capinfo_sendrecv_t capinfo_sendrecv);
+    size_t routetypes_size, capinfo_trans_t capinfo_trans);
 
 runtime_error_t new_msg_update(void *buff, size_t len,
     const msg_update_attr_t **attrs, size_t attrs_size);
@@ -348,6 +355,38 @@ runtime_error_t new_msg_keepalive(void *buff, size_t len);
 
 runtime_error_t new_msg_notification(void *buff, size_t len, uint8_t error_code,
     uint8_t error_subcode, size_t datalen, const void *data);
+
+
+/* update attribute serializers */
+
+runtime_error_t new_attr_withdrawnroutes(void *buff, size_t len, int lsencap,
+    uint32_t id, uint32_t seq, const route_t **routes, size_t routes_size);
+
+runtime_error_t new_attr_reachableroutes(void *buff, size_t len, int lsencap,
+    uint32_t id, uint32_t seq, const route_t **routes, size_t routes_size);
+
+runtime_error_t new_attr_nexthopserver(void *buff, size_t len,
+    uint32_t next_itad, const char *server);
+
+runtime_error_t new_attr_advertisementpath(void *buff, size_t len,
+    const itadpath_t *path);
+
+runtime_error_t new_attr_routedpath(void *buff, size_t len,
+    const itadpath_t *path);
+
+runtime_error_t new_attr_atomicaggregate(void *buff, size_t len);
+
+runtime_error_t new_attr_localpref(void *buff, size_t len, uint32_t localpref);
+
+runtime_error_t new_attr_multiexitdisc(void *buff, size_t len, uint32_t metric);
+
+runtime_error_t new_attr_communities(void *buff, size_t len,
+    const community_t *communities, size_t communities_size);
+
+runtime_error_t new_attr_itadtopology(void *buff, size_t len, uint32_t id,
+    uint32_t seq, const uint32_t *itads, size_t itads_size);
+
+runtime_error_t new_attr_convertedroute(void *buff, size_t len);
 
 
 #endif /* _PROTOCOL_H */

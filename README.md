@@ -2,6 +2,11 @@
 
 Modern TRIP (RFC 3219) LS routing daemon implementation in C99
 
+## Design
+
+ - protocol: static library for serialization and deserialization of protocol messages, thread safe static library with no allocation
+ - lsfunctions: 
+
 ## Resources
 
  - [RFC 1771 (1995) A Border Gateway Protocol 4 (BGP-4)](https://datatracker.ietf.org/doc/html/rfc1771)
