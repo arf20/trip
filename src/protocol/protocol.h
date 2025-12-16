@@ -87,6 +87,8 @@ enum capinfo_trans {
     CAPINFO_TRANS_RECV
 };
 
+#define CAPINFO_TRANS_NULL   (uint32_t)-1 /* only for serializer */
+
 typedef uint32_t capinfo_trans_t;
 
 
@@ -349,16 +351,27 @@ typedef struct {
 /* runtime errors */
 
 typedef enum runtime_errors_e {
+    /* serialization and deserialization */
     ERROR_BUFF = -1,                /* invalid buffer */
     ERROR_BUFFLEN = -2,             /* not enough buffer */
     ERROR_HOLD = -3,                /* hold time must be 0 or at least 3 s */
     ERROR_ITAD = -4,                /* ITAD must not be 0 (reserved) */
     ERROR_NOTIF_ERROR_CODE = -5,    /* invalid NOTIFICATION error code */
-    ERROR_NOTIF_ERROR_SUBCODE = -6  /* invalid NOTIFICATION error subcode */
+    ERROR_NOTIF_ERROR_SUBCODE = -6, /* invalid NOTIFICATION error subcode */
     /* deserialization specific */
     ERROR_INCOMPLETE = -10,         /* passed an incomplete message, recv more*/
-    ERROR_MSGTYPE = -11             /* invalid message type */
-    ERROR_VERSION = -12             /* unsupported protocol version */
+    ERROR_MSGTYPE = -11,            /* invalid message type */
+    ERROR_VERSION = -12,            /* unsupported protocol version */
+    ERROR_OPT = -13,                /* unsupported OPEN option param */
+    ERROR_CAPINFO_CODE = -14,       /* unsupported capability info code */
+    ERROR_AF = -15,                 /* unsupported address family */
+    ERROR_APP_PROTO = -16,          /* unsupported application protocol */
+    ERROR_TRANS = -17,              /* invalid send/recv capability */
+    ERROR_ATTR_TYPE = -18,          /* unsupported attribute type */
+    ERROR_ATTR_FLAG_WELL_KNOWN = -19,/* attribute should have well-known */
+    ERROR_ATTR_FLAG_LSENCAP = -20,  /* attribute must be link-state encapsul. */
+    ERROR_ITADPATH_TYPE = -21,      /* unsupported ITAD path type */
+    ERROR_COMMUNITY_ITAD = -22      /* reserved community ITAD with bad ID */
 } runtime_error_t;
 
 
@@ -377,7 +390,7 @@ runtime_error_t new_msg_notification(void *buff, size_t len, uint8_t error_code,
     uint8_t error_subcode, size_t datalen, const void *data);
 
 
-/* update attribute serializers */
+/* UPDATE attribute serializers */
 
 runtime_error_t new_attr_withdrawnroutes(void *buff, size_t len, int lsencap,
     uint32_t id, uint32_t seq, const route_t **routes, size_t routes_size);
@@ -407,6 +420,77 @@ runtime_error_t new_attr_itadtopology(void *buff, size_t len, uint32_t id,
     uint32_t seq, const uint32_t *itads, size_t itads_size);
 
 runtime_error_t new_attr_convertedroute(void *buff, size_t len);
+
+
+/* deserializers */
+
+/* messages */
+
+runtime_error_t parse_msg(const void *buff, size_t len, const msg_t **msg_out);
+
+
+/* message OPEN
+ */
+
+runtime_error_t parse_msg_open(const void *buff, size_t len,
+    const msg_open_t **open_out);
+
+runtime_error_t parse_msg_open_opt(const void *buff, size_t len,
+    const msg_open_opt_t **opt_out);
+
+runtime_error_t parse_capinfo_t(const void *buff, size_t len,
+    const capinfo_t **capinfo_out);
+
+runtime_error_t parse_capinfo_routetype(const void *buff, size_t len,
+    const capinfo_routetype_t **routetype_out);
+
+runtime_error_t parse_capinfo_trans(const void *buff, size_t len,
+    const capinfo_trans_t **trans_out);
+
+
+/* message UPDATE
+ * list of attributes
+ */
+
+runtime_error_t parse_msg_update_attr(const void *buff, size_t len,
+    const msg_update_attr_t **attr_out);
+
+runtime_error_t parse_msg_update_attr_lsencap(const void *buff, size_t len,
+    const msg_update_attr_lsencap_t **attr_out);
+
+
+/* attributes */
+
+runtime_error_t parse_route(const void *buff, size_t len,
+    const route_t **route_out);
+
+runtime_error_t parse_itadpath(const void *buff, size_t len,
+    const itadpath_t **itadpath_out);
+
+runtime_error_t parse_attr_localpref(const void *buff, size_t len,
+    const attr_localpref_t **localpref_out);
+
+runtime_error_t parse_attr_multiexitdisc(const void *buff, size_t len,
+    const attr_multiexitdisc_t **multiexitdisc_out);
+
+runtime_error_t parse_community(const void *buff, size_t len,
+    const community_t **community_out);
+
+runtime_error_t parse_itad(const void *buff, size_t len,
+    const uint32_t **itad_out);
+
+
+
+/* message KEEPALIVE
+ * (empty, no parser)
+ */
+
+
+/* message NOTIFICATION
+ */
+
+runtime_error_t parse_msg_notif(const void *buff, size_t len,
+    const msg_notif_t **notif_out);
 
 
 #endif /* _PROTOCOL_H */

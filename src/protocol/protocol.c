@@ -38,24 +38,24 @@
 int
 check_notif_error_code_subcode(uint8_t code, uint8_t subcode)
 {
-    switch (error_code) {
+    switch (code) {
     case NOTIF_CODE_ERROR_MSG:
-        if (error_subcode < NOTIF_SUBCODE_MSG_BAD_LEN ||
-            error_subcode > NOTIF_SUBCODE_MSG_BAD_TYPE)
+        if (subcode < NOTIF_SUBCODE_MSG_BAD_LEN ||
+            subcode > NOTIF_SUBCODE_MSG_BAD_TYPE)
         {
             return ERROR_NOTIF_ERROR_SUBCODE;
         }
     break;
     case NOTIF_CODE_ERROR_OPEN:
-        if (error_subcode < NOTIF_SUBCODE_OPEN_UNSUP_VERSION ||
-            error_subcode > NOTIF_SUBCODE_OPEN_CAP_MISMATCH)
+        if (subcode < NOTIF_SUBCODE_OPEN_UNSUP_VERSION ||
+            subcode > NOTIF_SUBCODE_OPEN_CAP_MISMATCH)
         {
             return ERROR_NOTIF_ERROR_SUBCODE;
         }
     break;
     case NOTIF_CODE_ERROR_UPDATE:
-        if (error_subcode < NOTIF_SUBCODE_UPDATE_MALFORM_ATTR ||
-            error_subcode > NOTIF_SUBCODE_UPDATE_INVAL_ATTR)
+        if (subcode < NOTIF_SUBCODE_UPDATE_MALFORM_ATTR ||
+            subcode > NOTIF_SUBCODE_UPDATE_INVAL_ATTR)
         {
             return ERROR_NOTIF_ERROR_SUBCODE;
         }
@@ -89,10 +89,10 @@ new_msg_open(void *buff, size_t len,
         opt_size = 0;
 
     if (capinfo_routetypes)
-        capinfo_routetypes_size = sizeof(msg_open_opt_capinfo_t) +
+        capinfo_routetypes_size = sizeof(capinfo_t) +
             (sizeof(capinfo_routetype_t) * routetypes_size);
     if (capinfo_trans != CAPINFO_TRANS_NULL)
-        capinfo_trans_size += sizeof(msg_open_opt_capinfo_t) +
+        capinfo_trans_size += sizeof(capinfo_t) +
             sizeof(capinfo_trans_t);
     if (capinfo_routetypes || capinfo_trans != CAPINFO_TRANS_NULL)
         opt_size = sizeof(msg_open_opt_t) + capinfo_routetypes_size +
@@ -133,18 +133,18 @@ new_msg_open(void *buff, size_t len,
     }
 
     if (capinfo_routetypes) {
-        msg_open_opt_capinfo_t *opt_capinfo = end;
-        opt_capinfo->cap_code = CAP_CODE_ROUTETYPE;
-        opt_capinfo->cap_len = sizeof(capinfo_routetype_t) * routetypes_size;
-        memcpy(opt_capinfo->cap_val, capinfo_routetypes, opt_capinfo->cap_len);
+        capinfo_t *capinfo = end;
+        capinfo->capinfo_code = CAPINFO_CODE_ROUTETYPE;
+        capinfo->capinfo_len = sizeof(capinfo_routetype_t) * routetypes_size;
+        memcpy(capinfo->capinfo_val, capinfo_routetypes, capinfo->capinfo_len);
         end += capinfo_routetypes_size;
     }
 
     if (capinfo_trans != CAPINFO_TRANS_NULL) {
-        msg_open_opt_capinfo_t *opt_capinfo = end;
-        opt_capinfo->cap_code = CAP_CODE_TRANS;
-        opt_capinfo->cap_len = sizeof(capinfo_trans_t);
-        *(capinfo_trans_t*)&opt_capinfo->cap_val = capinfo_trans;
+        capinfo_t *capinfo = end;
+        capinfo->capinfo_code = CAPINFO_CODE_TRANS;
+        capinfo->capinfo_len = sizeof(capinfo_trans_t);
+        *(capinfo_trans_t*)&capinfo->capinfo_val = capinfo_trans;
         end += capinfo_trans_size;
     }
 
@@ -548,6 +548,7 @@ parse_msg(const void *buff, size_t len, const msg_t **msg_out)
     return sizeof(msg_t);
 }
 
+
 /* message OPEN
  */
 
@@ -600,10 +601,10 @@ parse_capinfo_t(const void *buff, size_t len,
 
     const capinfo_t *capinfo = buff;
 
-    if (capinfo->capinfo_code < CAPINFO_CODE_ROUTE_TYPES ||
+    if (capinfo->capinfo_code < CAPINFO_CODE_ROUTETYPE ||
         capinfo->capinfo_code > CAPINFO_CODE_TRANS)
     {
-        return ERROR_CAPINFOCODE;
+        return ERROR_CAPINFO_CODE;
     }
 
     *capinfo_out = capinfo;
@@ -612,7 +613,7 @@ parse_capinfo_t(const void *buff, size_t len,
 }
 
 runtime_error_t
-parse_capinfo_routetype_t(const void *buff, size_t len,
+parse_capinfo_routetype(const void *buff, size_t len,
     const capinfo_routetype_t **routetype_out)
 {
     if (len < sizeof(capinfo_routetype_t))
@@ -630,7 +631,7 @@ parse_capinfo_routetype_t(const void *buff, size_t len,
         routetype->routetype_app_proto <= APP_PROTO_H323_225_0_ANNEXG) ||
         routetype->routetype_app_proto == APP_PROTO_IAX2))
     {
-        return ERROR_APPPROTO;
+        return ERROR_APP_PROTO;
     }
 
     *routetype_out = routetype;
@@ -639,7 +640,7 @@ parse_capinfo_routetype_t(const void *buff, size_t len,
 }
 
 runtime_error_t
-parse_capinfo_routetype_t(const void *buff, size_t len,
+parse_capinfo_trans(const void *buff, size_t len,
     const capinfo_trans_t **trans_out)
 {
     if (len < sizeof(capinfo_trans_t))
@@ -654,6 +655,7 @@ parse_capinfo_routetype_t(const void *buff, size_t len,
 
     return sizeof(capinfo_trans_t);
 }
+
 
 
 /* message UPDATE
@@ -675,20 +677,20 @@ parse_msg_update_attr(const void *buff, size_t len,
     if (attr->attr_type < ATTR_TYPE_WITHDRAWNROUTES ||
         attr->attr_type < ATTR_TYPE_CARRIER)
     {
-        return ERROR_ATTRTYPE;
+        return ERROR_ATTR_TYPE;
     }
 
     if ((attr->attr_type < ATTR_TYPE_WITHDRAWNROUTES ||
         attr->attr_type < ATTR_TYPE_CARRIER) &&
-        !IS_ATTR_FLAG_WELL_KNOWN(attr->flags))
+        !IS_ATTR_FLAG_WELL_KNOWN(attr->attr_flags))
     {
-        return ERROR_ATTRFLAG;
+        return ERROR_ATTR_FLAG_WELL_KNOWN;
     }
 
 
     *attr_out = attr;
 
-    if (IS_ATTR_FLAG_LSENCAP(attr->flags))
+    if (IS_ATTR_FLAG_LSENCAP(attr->attr_flags))
         return 0;
     else
         return sizeof(msg_update_attr_t);
@@ -704,7 +706,7 @@ parse_msg_update_attr_lsencap(const void *buff, size_t len,
 
     const msg_update_attr_lsencap_t *attr = buff;
 
-    if (!IS_ATTR_FLAG_LSENCAP(attr->flags))
+    if (!IS_ATTR_FLAG_LSENCAP(attr->attr_flags))
         return ERROR_ATTR_FLAG_LSENCAP;
 
     *attr_out = attr;
@@ -802,6 +804,7 @@ parse_attr_multiexitdisc(const void *buff, size_t len,
 /* attribute Communnity
  * list of communities
  */
+
 runtime_error_t
 parse_community(const void *buff, size_t len,
     const community_t **community_out)
@@ -845,7 +848,7 @@ parse_itad(const void *buff, size_t len,
 }
 
 
-/* attribute ITAD Topology
+/* attribute ConvertedRoute
  * (empty)
  */
 
@@ -856,12 +859,13 @@ parse_itad(const void *buff, size_t len,
  */
 
 
+
 /* message NOTIFICATION
  */
 
 runtime_error_t
 parse_msg_notif(const void *buff, size_t len,
-    const msg_notif_t **notif_out, const void **data)
+    const msg_notif_t **notif_out)
 {
     if (len < sizeof(msg_notif_t))
         return ERROR_INCOMPLETE;
@@ -874,7 +878,6 @@ parse_msg_notif(const void *buff, size_t len,
         return checkres;
 
     *notif_out = notif;
-    *data = notif->notif_data;
 
     return sizeof(msg_notif_t);
 }
