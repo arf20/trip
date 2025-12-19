@@ -1,7 +1,7 @@
 /*
 
     trip: Modern TRIP LS implementation
-    Copyright (C) 2023 arf20 (Ángel Ruiz Fernandez)
+    Copyright (C) 2025 arf20 (Ángel Ruiz Fernandez)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,14 +18,28 @@
 
 */
 
-#include <errno.h>
-#include <string.h>
-#include <stdio.h>
+#ifndef _MANAGER_H
+#define _MANAGER_H
 
-#define SOCK_TRY(o, a) \
-    if (o < 0) { \
-        fprintf(stderr, "[ERROR] %s:%s:%s: %s\n", \
-            __FILE__, __func__, __LINE__, strerror(errno)); \
-        a; \
-    }
+#include <netinet/in.h>
+
+
+typedef struct {
+    pthread_t   manager_thread;
+    int         manager_fd;
+
+    peer_t     *manager_peers;
+    size_t      manager_peers_size;
+    session_t  *manager_sessions;
+    size_t      manager_sessions_size;
+} manager_t;
+
+
+manager_t *manager_new(struct sockaddr_in6 listen_addr, uint16_t listen_port,
+    const peer_t *peers, size_t peers_size);
+
+void manager_destroy();
+
+
+#endif /* _MANAGER_H */
 

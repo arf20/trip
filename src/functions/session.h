@@ -1,7 +1,7 @@
 /*
 
     trip: Modern TRIP LS implementation
-    Copyright (C) 2023 arf20 (Ángel Ruiz Fernandez)
+    Copyright (C) 2025 arf20 (Ángel Ruiz Fernandez)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
 
 */
 
-#ifndef _LS_PEER_SESSION_H
-#define _LS_PEER_SESSION_H
+#ifndef _SESSION_H
+#define _SESSION_H
 
 #include <protocol/protocol.h>
 
-#include <sys/socket.h>
+#include <netinet/in.h>
 
 
 typedef enum {
@@ -40,11 +40,13 @@ typedef struct {
     void               *session_buff;
     session_state_t     session_state;
     uint32_t            session_itad, session_id;
-    uint16_t            hold;
+    uint16_t            session_hold;
 
-    capinfo_transmode_t session_type;
+    time_t              session_connect_retry;
 
-    struct sockaddr     session_peer_addr;
+    capinfo_transmode_t session_transmode;
+
+    struct sockaddr_in6 session_peer_addr;
     int                 session_fd;
 
     uint32_t            session_peer_itad, session_peer_id;
@@ -54,8 +56,8 @@ typedef struct {
 /* sessions start with no data exchanged yet */
 
 /* initiate connection to peer */
-session_t *session_new_initiate(uint32_t itad, uint32_t id, uint16_t hold,
-    const struct sockaddr *peer_addr);
+session_t * session_new_initiate(uint32_t itad, uint32_t id, uint16_t hold,
+    capinfo_transmode_t transmode, const struct sockaddr *peer_addr);
 
 /* connection request received from peer */
 session_t *session_new_peer(uint32_t itad, uint32_t id, uint16_t hold,
@@ -63,6 +65,8 @@ session_t *session_new_peer(uint32_t itad, uint32_t id, uint16_t hold,
 
 session_state_t session_get_state(const session_t *session);
 
+void session_destroy(session_t *session);
 
-#endif /* _LS_PEER_SESSION_H */
+
+#endif /* _SESSION_H */
 

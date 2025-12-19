@@ -1,7 +1,7 @@
 /*
 
     trip: Modern TRIP LS implementation
-    Copyright (C) 2023 arf20 (Ángel Ruiz Fernandez)
+    Copyright (C) 2025 arf20 (Ángel Ruiz Fernandez)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -396,17 +396,6 @@ extern const size_t supported_routetypes_size;
             __FILE__, __func__, __LINE__, runtime_error_strs[-r]); \
         a; \
     }
-
-#define PROTO_TRY_PARSE(o, a) \
-    r = o; \
-    if (r < 0) { \
-        if (r == ERROR_INCOMPLETE) \
-            continue; \
-        fprintf(stderr, "[DEBUG] %s:%s:%s: %s\n", \
-            __FILE__, __func__, __LINE__, runtime_error_strs[-r]); \
-        a; \
-    }
-
 
 
 /* message serializers
