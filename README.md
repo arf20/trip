@@ -11,6 +11,7 @@ DISCLAIMER: All code here is super untested
  - protocol: serialization and deserialization of protocol messages
  - functions: session manager
  - command: command parser, owns manager
+ - logging: logging functions
  - tripd: daemon, inits and launches parser for config and stdin
 
 ### Classes
@@ -19,6 +20,12 @@ DISCLAIMER: All code here is super untested
  - functions/manager: singleton session manager (thread: accept loop) owns sessions
  - functions/locator: singleton peer information
  - functions/session: maintains the session state and messages (thread: connect/recv loops)
+
+## Dependencies
+
+ - gcc compiler
+ - pthread
+ - BSD sockets
 
 ## Resources
 

@@ -394,8 +394,7 @@ extern const size_t supported_routetypes_size;
 #define PROTO_TRY(o, a) \
     r = o; \
     if (r < 0) { \
-        fprintf(stderr, "[DEBUG] %s:%s:%s: %s\n", \
-            __FILE__, __func__, __LINE__, runtime_error_strs[-r]); \
+        DEBUG("protocol error: %s\n", runtime_error_strs[-r]); \
         a; \
     }
 

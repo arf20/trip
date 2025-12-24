@@ -25,6 +25,8 @@
 #include "locator.h"
 #include "session.h"
 
+#include <logging/logging.c>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,6 +36,8 @@
 
 #include <arpa/inet.h>
 #include <unistd.h>
+
+#define _COMPONENT_ "manager"
 
 
 static void *
@@ -50,8 +54,7 @@ manager_loop(void *arg)
         int session_fd = accept(m->fd, (struct sockaddr*)&peer_addr,
             &peer_addr_size);
         if (session_fd < 0) {
-            fprintf(stderr, "[ERROR manager] could not accept peer: %s",
-                strerror(errno));
+            ERROR("could not accept() peer: %s", strerror(errno));
             return NULL;
         }
 
@@ -60,7 +63,7 @@ manager_loop(void *arg)
         const peer_t *peer = NULL;
         int idx = locator_lookup(m->locator, &peer, &peer_addr);
         if (!peer) {
-            printf("[INFO manager] rejecting unknown peer connection: %s\n",
+            INFO("rejecting unknown peer connection: %s",
                 inet_ntop(AF_INET6, &peer_addr.sin6_addr, addr_buff,
                 INET6_ADDRSTRLEN));
             close(session_fd);
@@ -68,7 +71,7 @@ manager_loop(void *arg)
         }
 
         if (m->sessions[idx]) {
-            printf("[INFO manager] rejecting existing peer connection: %s\n",
+            INFO("rejecting existing peer connection: %s",
                 inet_ntop(AF_INET6, &peer_addr.sin6_addr, addr_buff,
                 INET6_ADDRSTRLEN));
             close(session_fd);
@@ -77,7 +80,7 @@ manager_loop(void *arg)
 
         /* create session (run session thread */
         session_t *session = session_new_peer(m->itad, m->id,
-            peer->hold, peer->transmode, &peer_addr, session_fd);
+            peer->hold, peer->transmode, &peer_addr, peer->itad, session_fd);
 
         m->sessions[idx] = session; /* save session */
     }
@@ -108,23 +111,19 @@ manager_new(const struct sockaddr_in6 *listen_addr)
     /* create listen socket */
     m->fd = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
     if (m->fd < 0) {
-        fprintf(stderr, "[ERROR manager] could not create listen socket: %s\n",
-            strerror(errno));
+        ERROR("could not create listen socket: %s", strerror(errno));
         return NULL;
     }
 
     if (bind(m->fd, (const struct sockaddr*)listen_addr,
         sizeof(struct sockaddr_in6)) < 0)
     {
-        fprintf(stderr, "[ERROR manager] could not bind() listen socket: %s\n",
-            strerror(errno));
+        ERROR("could not bind() listen socket: %s", strerror(errno));
         return NULL;
     }
 
     if (listen(m->fd, SOMAXCONN) < 0) {
-        fprintf(stderr,
-            "[ERROR manager] could not listen() listen socket: %s\n",
-            strerror(errno));
+        ERROR("could not listen() listen socket: %s", strerror(errno));
         return NULL;
     }
 
@@ -143,8 +142,7 @@ manager_add_peer(manager_t *manager, const struct sockaddr_in6 *addr,
         manager->sessions = realloc(manager->sessions,
             manager->locator->peers_size * sizeof(session_t*));
     } else {
-        fprintf(stderr, "[WARNING manager] manager session vector "
-            "inconsistent with locator\n");
+        WARNING("manager session vector inconsistent with locator");
         return;
     }
 

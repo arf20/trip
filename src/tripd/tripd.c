@@ -23,6 +23,7 @@
 #include <protocol/protocol.h>
 
 #include <command/parser.h>
+#include <logging/logging.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -37,6 +38,7 @@ main(int arg, char **argv)
 {
     printf("tripd\n");
 
+    logging_init(stderr, LOG_DEBUG);
 
     parser_t *parser = parser_init(stdout);
 

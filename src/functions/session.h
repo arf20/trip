@@ -65,7 +65,7 @@ session_t *session_new_initiate(uint32_t itad, uint32_t id, uint16_t hold,
 /* connection request received from peer */
 session_t *session_new_peer(uint32_t itad, uint32_t id, uint16_t hold,
     capinfo_transmode_t transmode, const struct sockaddr_in6 *peer_addr,
-    int fd);
+    uint32_t peer_itad, int fd);
 
 session_state_t session_get_state(const session_t *session);
 
