@@ -35,6 +35,8 @@ typedef enum {
     STATE_ESTABLISHED
 } session_state_t;
 
+extern const char *session_state_strs[];
+
 typedef struct {
     pthread_t           session_thread;
     void               *session_buff;
