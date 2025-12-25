@@ -20,6 +20,8 @@
 
 */
 
+/** \file */
+
 #include "commands.h"
 
 #include <stdlib.h>

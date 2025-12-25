@@ -1,4 +1,4 @@
-# trip
+# tripd
 
 Modern TRIP (RFC 3219) LS routing daemon implementation in C99
 

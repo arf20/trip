@@ -20,6 +20,7 @@
 
 */
 
+/** \file */
 
 #include "parser.h"
 

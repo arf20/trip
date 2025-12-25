@@ -20,6 +20,8 @@
 
 */
 
+/** \file */
+
 #include "session.h"
 
 #include <logging/logging.h>

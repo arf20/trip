@@ -20,6 +20,8 @@
 
 */
 
+/** \file */
+
 #include "locator.h"
 
 #include <stddef.h>

@@ -20,6 +20,8 @@
 
 */
 
+/** \file */
+
 #include <protocol/protocol.h>
 
 #include <command/parser.h>
@@ -36,14 +38,21 @@
 
 #define DEFAULT_CONFIG_PATH "/usr/local/etc/tripd.conf"
 
+
 static parser_t *g_parser = NULL;
 
+
+/** \brief Print CLI usage */
 void
 print_usage(char *name)
 {
     printf("usage: %s [config file]\n", name);
 }
 
+/** \brief SIGINT handler
+ *
+ * Shutdowns daemon graceously calling shutdown command
+ */
 void
 sigint_handler(int dummy)
 {
@@ -51,6 +60,7 @@ sigint_handler(int dummy)
     exit(0);
 }
 
+/** \brief Entry point */
 int
 main(int argc, char **argv)
 {

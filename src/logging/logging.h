@@ -18,12 +18,18 @@
 
 */
 
+/** \file
+ * \brief logging utilities
+ */
+
+
 #ifndef _LOGGING_H
 #define _LOGGING_H
 
 #include <stdio.h>
 
 
+/** \brief error levels */
 typedef enum {
     LOG_ERROR,
     LOG_WARNING,
@@ -32,22 +38,29 @@ typedef enum {
 } loglevel_t;
 
 
+/** \brief initialize log file and log level */
 void logging_init(FILE *logf, loglevel_t loglevel);
 
+/** \brief log */
 void logging_log(loglevel_t level, const char *component,
     const char *format, ...);
 
+/** \brief log with debug info */
 void logging_log_debug(loglevel_t level, const char *component,
     const char *file, const char *func, int line, const char *format,
     ...);
 
 
+/** \brief log an error */
 #define ERROR(format, ...)   logging_log_debug(LOG_ERROR, _COMPONENT_, \
     __FILE__, __func__, __LINE__, format, ##__VA_ARGS__);
-#define INFO(format, ...)    logging_log(LOG_INFO, _COMPONENT_, format, \
-    ##__VA_ARGS__);
+/** \brief log a warning */
 #define WARNING(format, ...) logging_log(LOG_INFO, _COMPONENT_, format, \
     ##__VA_ARGS__);
+/** \brief log informational event */
+#define INFO(format, ...)    logging_log(LOG_INFO, _COMPONENT_, format, \
+    ##__VA_ARGS__);
+/** \brief log for debugging purposes */
 #define DEBUG(format, ...)   logging_log_debug(LOG_DEBUG, _COMPONENT_, \
     __FILE__, __func__, __LINE__, format, ##__VA_ARGS__);
 

@@ -20,6 +20,8 @@
 
 */
 
+/** \file */
+
 #include "manager.h"
 
 #include "locator.h"

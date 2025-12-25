@@ -20,6 +20,8 @@
 
 */
 
+/** \file */
+
 #include "logging.h"
 
 #include <stdarg.h>
