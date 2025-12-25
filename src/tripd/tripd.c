@@ -82,6 +82,7 @@ main(int argc, char **argv)
 
     signal(SIGINT, sigint_handler);
 
+
     logging_init(stderr, LOG_DEBUG);
 
     g_parser = parser_init(stdout);

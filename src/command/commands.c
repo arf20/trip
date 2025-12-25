@@ -24,8 +24,11 @@
 
 #include "commands.h"
 
+#include <logging/logging.h>
+
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #include <arpa/inet.h>
 #include <sys/types.h>
@@ -74,12 +77,14 @@ int
 cmd_enable(parser_t *parser, int no, char *args)
 {
     parser->state.enabled = 1;
+    return 0;
 }
 
 int
 cmd_configure(parser_t *parser, int no, char *args)
 {
     parser->state.ctx = CTX_CONFIG;
+    return 0;
 }
 
 int
@@ -93,6 +98,8 @@ cmd_shutdown(parser_t *parser, int no, char *args)
 {
     manager_shutdown(parser->manager);
     manager_destroy(parser->manager);
+
+    return 0;
 }
 
 /* config context */
@@ -100,7 +107,43 @@ cmd_shutdown(parser_t *parser, int no, char *args)
 int
 cmd_config_log(parser_t *parser, int no, char *args)
 {
-    /* TODO */
+    args = strip(args);
+
+    char *file_str = strtok(args, " ");
+    char *level_str = strtok(NULL, " ");
+
+    if (!file_str || !level_str) {
+        fprintf(parser->outf, "log: invalid arguments\n");
+        return -1;
+    }
+
+    FILE *f = stderr;
+    if (strcmp(file_str, "stdout") == 0)
+        f = stdout;
+    else if (strcmp(file_str, "stderr") == 0)
+        f = stderr;
+    else {
+        f = fopen(file_str, "a");
+        if (!f) {
+            fprintf(parser->outf, "log: error opening file: %s\n",
+                strerror(errno));
+            return -1;
+        }
+    }
+
+    loglevel_t level = LOG_DEBUG;
+    if (strcmp(file_str, "error") == 0)
+        level = LOG_ERROR;
+    else if (strcmp(file_str, "warning") == 0)
+        level = LOG_WARNING;
+    else if (strcmp(file_str, "info") == 0)
+        level = LOG_INFO;
+    else if (strcmp(file_str, "debug") == 0)
+        level = LOG_DEBUG;
+
+    logging_init(f, level);
+
+    return 0;
 }
 
 int
@@ -140,12 +183,16 @@ cmd_config_bind(parser_t *parser, int no, char *args)
     parser->manager = manager_new(&parser->listen_addr);
     if (!parser->manager)
         return -1;
+
+    return 0;
 }
 
 int
 cmd_config_prefixlist(parser_t *parser, int no, char *args)
 {
     parser->state.ctx = CTX_PREFIXLIST;
+
+    return 0;
 }
 
 int
@@ -168,6 +215,8 @@ cmd_config_trip(parser_t *parser, int no, char *args)
     }
 
     parser->manager->itad = itad;
+
+    return 0;
 }
 
 /* prefix list context */
@@ -204,6 +253,8 @@ cmd_config_trip_lsid(parser_t *parser, int no, char *args)
     parser->manager->id = lsid;
     
     manager_run(parser->manager);
+
+    return 0;
 }
 
 int
@@ -211,6 +262,7 @@ cmd_config_trip_timers(parser_t *parser, int no, char *args)
 {
     args = strip(args);
     parser->manager->hold = strtoul(args, NULL, 10);
+    return 0;
 }
 
 int
@@ -260,6 +312,8 @@ cmd_config_trip_peer(parser_t *parser, int no, char *args)
 
     /* pick first */
     manager_add_peer(parser->manager, &peer_addr, remote_itad_num);
+    
+    return 0;
 }
 
 

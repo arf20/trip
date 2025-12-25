@@ -35,8 +35,8 @@
 #define COLOR_END       "\e[0m"
 
 
-static FILE *g_logf;
-static loglevel_t g_loglevel;
+static FILE *g_logf = NULL;
+static loglevel_t g_loglevel = LOG_DEBUG;
 
 static const char *loglevel_strs[] = {
     COLOR_RED     "ERROR"   COLOR_END,

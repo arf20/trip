@@ -1,3 +1,5 @@
+<!--! [TOC] -->
+
 # tripd
 
 Modern TRIP (RFC 3219) LS routing daemon implementation in C99
@@ -6,9 +8,11 @@ DISCLAIMER: All code here is super untested
 
 ## Design
 
-### Components (static): protocol (thread safe, no alloc), lsfunctions, command
+### Components
 
- - protocol: serialization and deserialization of protocol messages
+As static libraries
+
+ - protocol: thread safe, no allocs; serialization and deserialization of protocol messages
  - functions: session manager
  - command: command parser, owns manager
  - logging: logging functions

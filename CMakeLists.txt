@@ -28,15 +28,15 @@ add_executable(tripd ${TRIPD_SRC})
 target_link_libraries(tripd command)
 
 
-find_package(Doxygen)
-if (DOXYGEN_FOUND)
+find_program(DOXYGEN doxygen)
+if (DOXYGEN)
     set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
     set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 
     configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
 
     add_custom_target(documentation ALL
-        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        COMMAND ${DOXYGEN} ${DOXYGEN_OUT}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         VERBATIM)
 else (DOXYGEN_FOUND)
