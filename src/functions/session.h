@@ -69,6 +69,8 @@ session_t *session_new_peer(uint32_t itad, uint32_t id, uint16_t hold,
 
 session_state_t session_get_state(const session_t *session);
 
+void session_shutdown(session_t *session);
+
 void session_destroy(session_t *session);
 
 

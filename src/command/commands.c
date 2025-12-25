@@ -86,6 +86,13 @@ cmd_show(parser_t *parser, int no, char *args)
     /* TODO */
 }
 
+int
+cmd_shutdown(parser_t *parser, int no, char *args)
+{
+    manager_shutdown(parser->manager);
+    manager_destroy(parser->manager);
+}
+
 /* config context */
 
 int
@@ -111,6 +118,7 @@ cmd_config_bind(parser_t *parser, int no, char *args)
     if (listen_addrs->ai_addr->sa_family == AF_INET6) {
         memcpy(&parser->listen_addr, listen_addrs->ai_addr,
             listen_addrs->ai_addrlen);
+        parser->listen_addr.sin6_port = htons(PROTO_TCP_PORT);
     } else if (listen_addrs->ai_addr->sa_family == AF_INET) {
         parser->listen_addr.sin6_family = AF_INET6;
         parser->listen_addr.sin6_port = htons(PROTO_TCP_PORT);
@@ -120,8 +128,11 @@ cmd_config_bind(parser_t *parser, int no, char *args)
     } else {
         fprintf(parser->outf, "bind-address: unsupported address family: %s\n",
             args);
+        freeaddrinfo(listen_addrs);
         return -1;
     }
+
+    freeaddrinfo(listen_addrs);
 
     /* create session manager */
     parser->manager = manager_new(&parser->listen_addr);
@@ -237,9 +248,11 @@ cmd_config_trip_peer(parser_t *parser, int no, char *args)
             (struct sockaddr_in *)peer_addrs->ai_addr);
     } else {
         fprintf(parser->outf, "peer: unsupported address family: %s\n", args);
+        freeaddrinfo(peer_addrs);
         return -1;
     }
 
+    freeaddrinfo(peer_addrs);
 
     uint32_t remote_itad_num = strtoul(remote_itad, NULL, 10);
 

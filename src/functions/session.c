@@ -228,6 +228,15 @@ session_new_peer(uint32_t itad, uint32_t id, uint16_t hold,
 }
 
 void
+session_shutdown(session_t *session)
+{
+    /* TODO send CEASE NOTIFICATION */
+    DEBUG("shutting down session %s", session_str(session));
+    shutdown(session->session_fd, SHUT_RDWR); /* recv loop does close() */
+    session->session_state = STATE_IDLE;
+}
+
+void
 session_destroy(session_t *session)
 {
     free(session->session_buff);

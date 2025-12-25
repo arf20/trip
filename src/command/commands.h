@@ -31,6 +31,7 @@ int cmd_exit(parser_t *parser, int no, char *args);
 int cmd_enable(parser_t *parser, int no, char *args);
 int cmd_configure(parser_t *parser, int no, char *args);
 int cmd_show(parser_t *parser, int no, char *args);
+int cmd_shutdown(parser_t *parser, int no, char *args);
 
 /* config context */
 int cmd_config_log(parser_t *parser, int no, char *args);

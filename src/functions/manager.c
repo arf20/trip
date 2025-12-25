@@ -45,8 +45,8 @@ manager_loop(void *arg)
 {
     manager_t *m = arg;
 
-    struct sockaddr_in6 peer_addr;
-    socklen_t peer_addr_size;
+    struct sockaddr_in6 peer_addr = { 0 };
+    socklen_t peer_addr_size = 0;
     char addr_buff[INET6_ADDRSTRLEN];
 
     while (1) {
@@ -127,6 +127,11 @@ manager_new(const struct sockaddr_in6 *listen_addr)
         return NULL;
     }
 
+    char abuff[INET6_ADDRSTRLEN];
+    DEBUG("started session manager, listening at [%s]:%d",
+        inet_ntop(AF_INET6, &listen_addr->sin6_addr, abuff, sizeof(abuff)),
+        ntohs(listen_addr->sin6_port));
+
     return m;
 }
 
@@ -146,7 +151,7 @@ manager_add_peer(manager_t *manager, const struct sockaddr_in6 *addr,
         return;
     }
 
-    manager->sessions[manager->sessions_size - 1] =
+    manager->sessions[manager->sessions_size++] =
         session_new_initiate(manager->itad, manager->id, manager->hold,
             CAPINFO_TRANS_SEND_RECV, addr, itad);
 }
@@ -162,6 +167,21 @@ void
 manager_stop(manager_t *manager)
 {
     shutdown(manager->fd, SHUT_RDWR);
+}
+
+void
+manager_shutdown(manager_t *manager)
+{
+    shutdown(manager->fd, SHUT_RDWR);
+
+    for (size_t i = 0; i < manager->sessions_size; i++) {
+        if (manager->sessions[i]) {
+            session_shutdown(manager->sessions[i]);
+            session_destroy(manager->sessions[i]);
+        }
+    }
+
+    DEBUG("shutdown complete");
 }
 
 void

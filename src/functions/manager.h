@@ -51,6 +51,8 @@ void manager_run(manager_t *manager);
 
 void manager_stop(manager_t *manager);
 
+void manager_shutdown(manager_t *manager);
+
 void manager_destroy(manager_t *manager);
 
 
