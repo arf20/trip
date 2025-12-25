@@ -1,0 +1,5 @@
+<map id="msg_open_t" name="msg_open_t">
+<area shape="rect" id="Node000001" title="Message OPEN." alt="" coords="19,101,121,127"/>
+<area shape="rect" id="Node000002" href="$structmsg__open__opt__t.html" title="Message OPEN optional paramter." alt="" coords="5,5,135,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,45,73,101,67,101,67,45"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="locator.c" name="locator.c">
+<area shape="rect" id="Node000001" title=" " alt="" coords="341,5,419,31"/>
+<area shape="rect" id="Node000002" href="$locator_8h.html" title="Peer locator." alt="" coords="182,79,261,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="356,33,261,75,259,71,353,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="203,225,277,251"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="372,32,336,80,309,129,284,179,259,216,255,213,279,176,305,126,331,77,368,29"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="345,79,415,104"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="383,31,383,65,377,65,377,31"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="439,79,510,104"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="397,29,450,68,447,72,394,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="534,79,626,104"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="413,28,535,71,533,76,411,33"/>
+<area shape="rect" id="Node000003" href="$protocol_8h.html" title="Protocol definition header." alt="" coords="5,152,149,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="199,106,114,148,112,143,197,102"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="173,152,269,177"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="224,104,224,138,219,138,219,104"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="42,225,113,251"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="80,178,80,212,75,212,75,178"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="105,175,202,217,200,222,102,180"/>
+</map>

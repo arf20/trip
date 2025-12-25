@@ -1,0 +1,18 @@
+<map id="manager.h" name="manager.h">
+<area shape="rect" id="Node000001" title="Session manager." alt="" coords="47,5,137,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,152,101,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,33,59,53,43,80,39,109,46,138,40,139,34,110,37,78,55,50,75,29"/>
+<area shape="rect" id="Node000003" href="$session_8h.html" title="Session logic." alt="" coords="156,79,239,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,28,170,69,168,73,107,33"/>
+<area shape="rect" id="Node000007" href="$locator_8h.html" title="Peer locator." alt="" coords="53,79,131,104"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="95,31,95,65,89,65,89,31"/>
+<area shape="poly" id="edge6_Node000003_Node000002" title=" " alt="" coords="175,106,90,148,88,143,173,102"/>
+<area shape="rect" id="Node000004" href="$protocol_8h.html" title="Protocol definition header." alt="" coords="125,152,269,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="200,104,200,138,195,138,195,104"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="114,225,185,251"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="192,179,167,216,162,213,187,176"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="209,225,284,251"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="208,176,233,213,229,216,203,179"/>
+<area shape="poly" id="edge9_Node000007_Node000002" title=" " alt="" coords="88,106,68,141,64,139,83,103"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="110,102,170,142,168,147,107,106"/>
+</map>

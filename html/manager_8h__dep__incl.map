@@ -1,0 +1,18 @@
+<map id="manager.h" name="manager.h">
+<area shape="rect" id="Node000001" title="Session manager." alt="" coords="88,5,179,31"/>
+<area shape="rect" id="Node000002" href="$manager_8c.html" title=" " alt="" coords="5,79,96,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,42,66,80,62,76,108,38"/>
+<area shape="rect" id="Node000003" href="$parser_8c.html" title=" " alt="" coords="119,225,193,251"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="139,45,157,225,152,225,133,45"/>
+<area shape="rect" id="Node000004" href="$parser_8h.html" title="Command parser." alt="" coords="204,79,279,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="163,36,225,76,222,81,161,40"/>
+<area shape="poly" id="edge8_Node000004_Node000003" title=" " alt="" coords="230,118,165,226,161,224,225,115"/>
+<area shape="rect" id="Node000005" href="$commands_8h.html" title="Commands." alt="" coords="221,152,328,177"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="255,115,272,151,267,153,250,118"/>
+<area shape="rect" id="Node000007" href="$tripd_8c.html" title=" " alt="" coords="346,225,409,251"/>
+<area shape="poly" id="edge9_Node000004_Node000007" title=" " alt="" coords="284,108,314,126,342,150,365,189,377,224,372,226,360,191,338,154,311,130,281,112"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="245,187,177,227,174,223,242,182"/>
+<area shape="rect" id="Node000006" href="$commands_8c.html" title=" " alt="" coords="217,225,322,251"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="275,191,273,225,268,225,270,191"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="304,183,362,223,359,227,301,187"/>
+</map>

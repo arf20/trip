@@ -1,0 +1,24 @@
+<map id="commands.h" name="commands.h">
+<area shape="rect" id="Node000001" title="Commands." alt="" coords="105,5,212,31"/>
+<area shape="rect" id="Node000002" href="$parser_8h.html" title="Command parser." alt="" coords="121,79,196,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,31,161,65,156,65,156,31"/>
+<area shape="rect" id="Node000003" href="$manager_8h.html" title="Session manager." alt="" coords="15,152,169,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="150,106,114,144,110,140,146,103"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="193,152,260,177"/>
+<area shape="poly" id="edge12_Node000002_Node000010" title=" " alt="" coords="172,102,208,140,204,144,168,106"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,299,101,324"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="79,179,59,200,43,226,39,256,46,285,40,286,34,256,37,224,55,196,75,175"/>
+<area shape="rect" id="Node000005" href="$session_8h.html" title="Session logic." alt="" coords="156,225,239,251"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="110,175,170,215,168,220,107,180"/>
+<area shape="rect" id="Node000009" href="$locator_8h.html" title="Peer locator." alt="" coords="53,225,131,251"/>
+<area shape="poly" id="edge9_Node000003_Node000009" title=" " alt="" coords="95,178,95,212,89,212,89,178"/>
+<area shape="poly" id="edge8_Node000005_Node000004" title=" " alt="" coords="175,253,90,295,88,290,173,248"/>
+<area shape="rect" id="Node000006" href="$protocol_8h.html" title="Protocol definition header." alt="" coords="125,299,269,324"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="200,251,200,285,195,285,195,251"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="114,372,185,397"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="192,326,167,362,162,359,187,323"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="209,372,284,397"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="208,323,233,359,229,362,203,326"/>
+<area shape="poly" id="edge11_Node000009_Node000004" title=" " alt="" coords="88,252,68,288,64,285,83,250"/>
+<area shape="poly" id="edge10_Node000009_Node000006" title=" " alt="" coords="110,248,170,289,168,293,107,253"/>
+</map>

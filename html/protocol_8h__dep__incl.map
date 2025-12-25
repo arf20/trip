@@ -1,0 +1,34 @@
+<map id="protocol.h" name="protocol.h">
+<area shape="rect" id="Node000001" title="Protocol definition header." alt="" coords="325,5,411,31"/>
+<area shape="rect" id="Node000002" href="$locator_8h.html" title="Peer locator." alt="" coords="102,79,181,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="319,37,179,81,177,76,318,32"/>
+<area shape="rect" id="Node000010" href="$tripd_8c.html" title=" " alt="" coords="351,372,414,397"/>
+<area shape="poly" id="edge19_Node000001_Node000010" title=" " alt="" coords="383,42,406,96,415,129,419,163,419,239,415,278,408,316,390,373,385,371,402,315,410,278,413,239,413,163,410,130,401,98,379,44"/>
+<area shape="rect" id="Node000011" href="$protocol_8c.html" title=" " alt="" coords="454,79,541,104"/>
+<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="402,35,477,76,475,81,400,40"/>
+<area shape="rect" id="Node000012" href="$session_8h.html" title="Session logic." alt="" coords="232,79,315,104"/>
+<area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="343,41,290,81,287,76,340,37"/>
+<area shape="rect" id="Node000003" href="$locator_8c.html" title=" " alt="" coords="29,152,107,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="121,116,82,154,78,150,118,112"/>
+<area shape="rect" id="Node000004" href="$manager_8c.html" title=" " alt="" coords="5,225,96,251"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="90,106,50,124,33,137,20,153,15,171,20,190,42,224,37,227,15,192,10,171,15,151,30,133,48,120,87,101"/>
+<area shape="rect" id="Node000005" href="$manager_8h.html" title="Session manager." alt="" coords="181,152,272,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="167,110,214,150,211,154,164,115"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="187,185,80,228,78,223,185,180"/>
+<area shape="rect" id="Node000006" href="$parser_8c.html" title=" " alt="" coords="125,372,198,397"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="218,191,204,226,180,309,166,372,161,371,175,308,199,224,213,189"/>
+<area shape="rect" id="Node000007" href="$parser_8h.html" title="Command parser." alt="" coords="213,225,288,251"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="237,189,249,224,244,226,232,191"/>
+<area shape="poly" id="edge12_Node000007_Node000006" title=" " alt="" coords="236,264,212,300,170,373,165,370,207,297,232,261"/>
+<area shape="rect" id="Node000008" href="$commands_8h.html" title="Commands." alt="" coords="221,299,328,324"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="261,263,273,298,268,299,256,265"/>
+<area shape="poly" id="edge13_Node000007_Node000010" title=" " alt="" coords="288,255,316,273,342,297,367,336,381,371,377,373,362,338,338,300,312,278,285,259"/>
+<area shape="poly" id="edge10_Node000008_Node000006" title=" " alt="" coords="246,334,181,374,178,370,243,329"/>
+<area shape="rect" id="Node000009" href="$commands_8c.html" title=" " alt="" coords="222,372,327,397"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="277,338,277,372,272,372,272,338"/>
+<area shape="poly" id="edge11_Node000008_Node000010" title=" " alt="" coords="305,329,366,370,364,374,302,334"/>
+<area shape="poly" id="edge16_Node000012_Node000004" title=" " alt="" coords="241,113,171,154,67,227,64,223,168,150,239,108"/>
+<area shape="poly" id="edge17_Node000012_Node000005" title=" " alt="" coords="260,117,236,153,232,150,256,114"/>
+<area shape="rect" id="Node000013" href="$session_8c.html" title=" " alt="" coords="296,152,379,177"/>
+<area shape="poly" id="edge18_Node000012_Node000013" title=" " alt="" coords="295,113,329,150,325,154,291,116"/>
+</map>

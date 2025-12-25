@@ -1,0 +1,23 @@
+<map id="locator.h" name="locator.h">
+<area shape="rect" id="Node000001" title="Peer locator." alt="" coords="81,5,159,31"/>
+<area shape="rect" id="Node000002" href="$locator_8c.html" title=" " alt="" coords="5,79,83,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,42,58,80,55,76,96,38"/>
+<area shape="rect" id="Node000003" href="$manager_8c.html" title=" " alt="" coords="75,152,165,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="123,45,123,152,117,152,117,45"/>
+<area shape="rect" id="Node000004" href="$manager_8h.html" title="Session manager." alt="" coords="157,79,248,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="145,38,191,76,187,80,142,42"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="181,115,135,154,132,150,177,111"/>
+<area shape="rect" id="Node000005" href="$parser_8c.html" title=" " alt="" coords="189,299,262,324"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="208,118,227,298,221,299,203,118"/>
+<area shape="rect" id="Node000006" href="$parser_8h.html" title="Command parser." alt="" coords="273,152,348,177"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="233,109,294,150,292,154,230,114"/>
+<area shape="poly" id="edge11_Node000006_Node000005" title=" " alt="" coords="299,191,234,300,230,297,294,188"/>
+<area shape="rect" id="Node000007" href="$commands_8h.html" title="Commands." alt="" coords="291,225,397,251"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="324,189,341,224,336,226,320,191"/>
+<area shape="rect" id="Node000009" href="$tripd_8c.html" title=" " alt="" coords="415,299,478,324"/>
+<area shape="poly" id="edge12_Node000006_Node000009" title=" " alt="" coords="353,181,384,199,411,224,435,262,446,298,441,299,430,265,407,227,380,204,350,186"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="314,260,246,301,243,296,312,255"/>
+<area shape="rect" id="Node000008" href="$commands_8c.html" title=" " alt="" coords="286,299,391,324"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="345,265,342,299,337,298,339,264"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="373,256,431,296,428,301,370,261"/>
+</map>

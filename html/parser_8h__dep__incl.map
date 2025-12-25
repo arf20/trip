@@ -1,0 +1,13 @@
+<map id="parser.h" name="parser.h">
+<area shape="rect" id="Node000001" title="Command parser." alt="" coords="118,5,193,31"/>
+<area shape="rect" id="Node000002" href="$commands_8h.html" title="Commands." alt="" coords="102,79,209,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,44,158,79,153,79,153,44"/>
+<area shape="rect" id="Node000004" href="$parser_8c.html" title=" " alt="" coords="5,152,79,177"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="131,41,92,80,67,119,50,153,45,150,62,116,88,77,128,38"/>
+<area shape="rect" id="Node000005" href="$tripd_8c.html" title=" " alt="" coords="232,152,295,177"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="183,37,223,77,246,116,261,151,257,153,242,119,219,80,180,41"/>
+<area shape="rect" id="Node000003" href="$commands_8c.html" title=" " alt="" coords="103,152,208,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="158,118,158,152,153,152,153,118"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="127,114,62,154,59,150,124,109"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="185,109,247,150,244,154,183,114"/>
+</map>

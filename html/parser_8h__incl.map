@@ -1,0 +1,22 @@
+<map id="parser.h" name="parser.h">
+<area shape="rect" id="Node000001" title="Command parser." alt="" coords="121,5,196,31"/>
+<area shape="rect" id="Node000002" href="$manager_8h.html" title="Session manager." alt="" coords="15,79,169,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,33,114,70,110,67,146,29"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="193,79,260,104"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="172,29,208,67,204,70,168,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,225,101,251"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="79,106,59,126,43,153,39,183,46,211,40,212,34,183,37,151,55,123,75,102"/>
+<area shape="rect" id="Node000004" href="$session_8h.html" title="Session logic." alt="" coords="156,152,239,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="110,102,170,142,168,147,107,106"/>
+<area shape="rect" id="Node000008" href="$locator_8h.html" title="Peer locator." alt="" coords="53,152,131,177"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="95,104,95,138,89,138,89,104"/>
+<area shape="poly" id="edge7_Node000004_Node000003" title=" " alt="" coords="175,180,90,221,88,217,173,175"/>
+<area shape="rect" id="Node000005" href="$protocol_8h.html" title="Protocol definition header." alt="" coords="125,225,269,251"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="200,178,200,212,195,212,195,178"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="114,299,185,324"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="192,253,167,289,162,286,187,250"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="209,299,284,324"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="208,249,233,286,229,289,203,253"/>
+<area shape="poly" id="edge10_Node000008_Node000003" title=" " alt="" coords="88,179,68,215,64,212,83,176"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="110,175,170,215,168,220,107,180"/>
+</map>
